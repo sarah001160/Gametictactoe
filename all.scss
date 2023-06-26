@@ -1,0 +1,161 @@
+//注意權重
+
+:root{ //css 變數
+    --cell-size:100px;
+    --mark-size:calc(var(--cell-size)*0.9);
+  }
+  //全體元素固定寬度不受padding影響
+  *,*::before,*::after{
+    box-sizing:border-box;
+  }
+  
+  
+  body{
+    margin:0;
+    .board{
+        width: 100vw; /*寬度100 view width視窗同寬*/
+        height: 100vh;/*高度 100 view height視窗同高*/
+        display:grid; 
+        justify-content:center;/*沿著主軸置中 主軸預設方向row*/
+        align-items:center; /*沿著交叉軸置中*/
+        align-content:center;//multi line flexibles boxes
+        grid-template-columns:repeat(3, auto); /*.board的內部元素，每三個一排就換行*/
+    
+        div.cell{ //放OX的格子
+          border:1px solid black; /*邊框黑色*/
+          width:var(--cell-size);  /*寬度:值是CSS變數的值,方便使用*/
+          height:var(--cell-size);/*高度*/
+          display:flex; // row is displayed by default
+          justify-content:center;/*沿著主軸置中 主軸預設方向row*/
+          align-items:center;/*沿著交叉軸置中*/
+          position:relative;
+          cursor:pointer; /*滑鼠碰到div.cell變手指*/
+        }
+        //去除邊框 形成井字盤 
+        //top border removed
+        .cell:nth-child(1),
+        .cell:nth-child(2),
+        .cell:nth-child(3){
+          border-top:none;
+        }
+        /*1,4,7格左邊border移除*/
+        .cell:nth-child(3n+1){ /*n從0開始代入3n+1會得到1,4,7*/
+          border-left:none;
+        }
+        //right border removed
+        .cell:nth-child(3n+3){
+          border-right:none;
+        }
+        //bottom-border removed
+        .cell:nth-child(7),
+        .cell:nth-child(8),
+        .cell:nth-child(9){
+          border-bottom:none;
+        }
+         
+        //已經有圖形的格子 滑鼠禁止出現手指
+        .cell.x,
+        .cell.circle{
+            cursor:not-allowed;
+        }
+        
+        //叉叉及圈圈的color放前方,後方灰色的權重才得覆蓋
+        .cell.x::before,
+        .cell.x::after{
+          background-color:red;
+        }
+        //圈圈
+        .cell.circle::before{
+            background-color:black;
+        }
+        
+         //不含.x及.circle的cell 滑鼠Hover應出現淡色圖形
+        &.x .cell:not(.x):not(.circle):hover::before,
+        &.x .cell:not(.x):not(.circle):hover::after,
+        &.circle .cell:not(.x):not(.circle):hover::before{
+            background-color:lightgrey;
+        }
+    
+        //叉叉的設定
+        //basic commom setting
+        .cell.x::before,
+        .cell.x::after,
+        &.x .cell:not(.x):not(.circle):hover::before,
+        &.x .cell:not(.x):not(.circle):hover::after{
+          content:"";
+          position:absolute; //.cell is position relative
+          width:calc(var(--mark-size)*0.15);//寬度100*0.15
+          height:var(--mark-size);//高度90
+        }
+        .cell.x::before,
+        &.x .cell:not(.x):not(.circle):hover::before{//前傾45度/
+            transform:rotate(45deg);
+        }
+        .cell.x::after,
+        &.x .cell:not(.x):not(.circle):hover::after{//反傾45度\
+            transform:rotate(-45deg);
+        }
+    
+    
+        //製作O圈圈
+        .cell.circle::before,
+        .cell.circle::after,
+        &.circle .cell:not(.x):not(.circle):hover::before,
+        &.circle .cell:not(.x):not(.circle):hover::after
+        {
+            content:"";
+            position:absolute;
+            border-radius:50%; //圓形
+        }
+    
+        .cell.circle::before,
+        &.circle .cell:not(.x):not(.circle):hover::before{
+            width:var(--mark-size);
+            height:var(--mark-size);
+        }
+    
+        .cell.circle::after,
+        &.circle .cell:not(.x):not(.circle):hover::after{
+            width:calc(var(--mark-size)*0.7);
+            height:calc(var(--mark-size)*0.7);
+            background-color:white;
+        }
+    
+      } //end of .board{}
+
+       
+    .winning-message{
+        position:fixed;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        background-color:rgba(0,0,0, 0.9);
+        display:flex;
+        flex-direction:column;
+        justify-content:center;//main axis
+        align-items: center; //across axis
+        color:white;
+        font-size:5rem;
+        display:none;
+        button{
+            border:1px solid black;
+            padding:0.25rem 0.5rem;
+            background-color:white;
+            font-size:3rem;
+            cursor:pointer;
+            &:hover{
+                background-color:black;
+                color:white;
+                border:1px solid white;
+            }
+        }
+        &.show{
+            display:flex;
+        }
+    }
+  }
+  
+  
+  
+ 

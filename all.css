@@ -1,0 +1,121 @@
+@charset "UTF-8";
+:root {
+  --cell-size:100px;
+  --mark-size:calc(var(--cell-size)*0.9);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+body .board {
+  width: 100vw; /*寬度100 view width視窗同寬*/
+  height: 100vh; /*高度 100 view height視窗同高*/
+  display: grid;
+  justify-content: center; /*沿著主軸置中 主軸預設方向row*/
+  align-items: center; /*沿著交叉軸置中*/
+  align-content: center;
+  grid-template-columns: repeat(3, auto); /*.board的內部元素，每三個一排就換行*/
+  /*1,4,7格左邊border移除*/
+}
+body .board div.cell {
+  border: 1px solid black; /*邊框黑色*/
+  width: var(--cell-size); /*寬度:值是CSS變數的值,方便使用*/
+  height: var(--cell-size); /*高度*/
+  display: flex;
+  justify-content: center; /*沿著主軸置中 主軸預設方向row*/
+  align-items: center; /*沿著交叉軸置中*/
+  position: relative;
+  cursor: pointer; /*滑鼠碰到div.cell變手指*/
+}
+body .board .cell:nth-child(1),
+body .board .cell:nth-child(2),
+body .board .cell:nth-child(3) {
+  border-top: none;
+}
+body .board .cell:nth-child(3n+1) { /*n從0開始代入3n+1會得到1,4,7*/
+  border-left: none;
+}
+body .board .cell:nth-child(3n+3) {
+  border-right: none;
+}
+body .board .cell:nth-child(7),
+body .board .cell:nth-child(8),
+body .board .cell:nth-child(9) {
+  border-bottom: none;
+}
+body .board .cell.x,
+body .board .cell.circle {
+  cursor: not-allowed;
+}
+body .board .cell.x::before,
+body .board .cell.x::after {
+  background-color: red;
+}
+body .board .cell.circle::before {
+  background-color: black;
+}
+body .board.x .cell:not(.x):not(.circle):hover::before, body .board.x .cell:not(.x):not(.circle):hover::after, body .board.circle .cell:not(.x):not(.circle):hover::before {
+  background-color: lightgrey;
+}
+body .board .cell.x::before,
+body .board .cell.x::after, body .board.x .cell:not(.x):not(.circle):hover::before, body .board.x .cell:not(.x):not(.circle):hover::after {
+  content: "";
+  position: absolute;
+  width: calc(var(--mark-size) * 0.15);
+  height: var(--mark-size);
+}
+body .board .cell.x::before, body .board.x .cell:not(.x):not(.circle):hover::before {
+  transform: rotate(45deg);
+}
+body .board .cell.x::after, body .board.x .cell:not(.x):not(.circle):hover::after {
+  transform: rotate(-45deg);
+}
+body .board .cell.circle::before,
+body .board .cell.circle::after, body .board.circle .cell:not(.x):not(.circle):hover::before, body .board.circle .cell:not(.x):not(.circle):hover::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+}
+body .board .cell.circle::before, body .board.circle .cell:not(.x):not(.circle):hover::before {
+  width: var(--mark-size);
+  height: var(--mark-size);
+}
+body .board .cell.circle::after, body .board.circle .cell:not(.x):not(.circle):hover::after {
+  width: calc(var(--mark-size) * 0.7);
+  height: calc(var(--mark-size) * 0.7);
+  background-color: white;
+}
+body .winning-message {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 5rem;
+  display: none;
+}
+body .winning-message button {
+  border: 1px solid black;
+  padding: 0.25rem 0.5rem;
+  background-color: white;
+  font-size: 3rem;
+  cursor: pointer;
+}
+body .winning-message button:hover {
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+}
+body .winning-message.show {
+  display: flex;
+}/*# sourceMappingURL=all.css.map */
